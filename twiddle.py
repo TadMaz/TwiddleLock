@@ -3,7 +3,7 @@ import pigpio
 import time
 import Adafruit_MCP3008
 import Adafruit_GPIO.SPI as SPI
-
+import threading
 #GPIO Pins
 
 START_SWITCH = 2
@@ -32,6 +32,7 @@ SPI_PORT = 0
 SPI_DEVICE = 0
 MCP = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 values = []
+times = []
 
 # Call back global variables
 switch_cb, start_cb = 0, 0
@@ -60,6 +61,7 @@ def reset():
 def secure_mode():
 
     #read ADC,convert voltages and store values in log
+    STATE_CHANGED = False
     values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
     sleep(SAMPLING_PERIOD)
     while True:
@@ -67,11 +69,21 @@ def secure_mode():
         updateValues()
         print("BUFFER: ",values)
         sleep(SAMPLING_PERIOD)
-        if( values[0]-values[1]>0.1 ):
+        if( values[0]-values[1]>0.05 ):
             print("R")
-        elif( abs(values[0]-values[1] )<0.1):
+            TICK = time.monotonic()
+            #start timer
+            while(not STATE_CHANGED):
+                sleep(SAMPLING_PERIOD)
+                if(abs(values[0]-values[1] )<0.05 or values[0]-values[1]<0.05 ):
+                    times.insert(0,time.monotonic() - TICK)
+                    print("Durations are :",times)
+                    STATE_CHANGED = True
+            #wait for state to change every 100ms
+            #stop timer if state changes
+        elif( abs(values[0]-values[1] )<0.05):
             print("constant")
-        elif ( values[0]-values[1]<0.1 ):
+        elif ( values[0]-values[1]<0.05 ):
             print("L")
 
 def switch_lock_mode(gpio, level, tick):
