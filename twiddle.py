@@ -1,5 +1,4 @@
 import spidev
-import SPI
 import pigpio 
 import time
 import Adafruit_MCP3008
@@ -21,7 +20,7 @@ SPICS = 8
 # Global variables
 FREQ = 100 # Frequency of reading MCP
 READ = True
-POT_CHANNEL = 1
+POT_CHANNEL = 0
 BUFFER_MAX = 16
 SAMPLING_PERIOD = 0.1
 
@@ -61,11 +60,12 @@ def reset():
 def secure_mode():
 
     #read ADC,convert voltages and store values in log
+    values.insert(1, ADCPOT(MCP.read_adc(POT_CHANNEL)))
+    sleep(SAMPLING_PERIOD)
     while True:
         values.insert(1, ADCPOT(MCP.read_adc(POT_CHANNEL)))
-        print("Buffer :",values)
         updateValues()
-        time.sleep(SAMPLING_PERIOD)
+        sleep(SAMPLING_PERIOD)
         if( values[0]-values[1]>0 ):
             print("R")
         else:
@@ -84,7 +84,7 @@ def main():
     global switch_cb, start_cb
     switch_cb = pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE, switch_lock_mode) # Switch the mode
     start_cb = pi.callback(START_SWITCH, pigpio.FALLING_EDGE, start) # Start the selected mode
-
+    secure_mode()
 
 def start(gpio, level, pin):
     pass
