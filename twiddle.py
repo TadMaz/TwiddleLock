@@ -2,6 +2,7 @@ import spidev
 import SPI
 import pigpio 
 import time
+import Adafruit_MCP3008
 
 #GPIO Pins
 
