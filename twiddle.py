@@ -77,7 +77,7 @@ def unsecure_mode():
         pass
     TICK = time.monotonic()
     print("Now taking readings")
-    while(len(DURATIONS)< 3):
+    while(len(DURATIONS)< len(KEY)):
         while (reading != MCP.read(0)):
             reading = MCP.read(0)
             time.sleep(1/FREQ)
@@ -93,4 +93,7 @@ def unsecure_mode():
         lock()
 
 def unsecure_check():
-    pass
+    for i in range(len(KEY)):
+        if KEY[i] != DURATIONS[i]:
+            return False
+    return True
