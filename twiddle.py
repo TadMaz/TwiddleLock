@@ -68,8 +68,11 @@ def secure_mode():
         sleep(SAMPLING_PERIOD)
         if( values[0]-values[1]>0 ):
             print("R")
+        elif( abs(values[0]-values[1] )<0.01):
+            print("constant")
         else:
             print("L")
+
 def switch_lock_mode(gpio, level, tick):
     global LOCK_MODE
     sleep(0.5) # Debounce time of 0.5 seconds
