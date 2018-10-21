@@ -19,12 +19,15 @@ SPICS = 8
 # Global variables
 FREQ = 0
 READ = True
+POT_CHANNEL = 1
+BUFFER_MAX = 16
+SAMPLING_PERIOD = 0.1
 
 pi =  pigpio.pi()
 SPI_PORT = 0
 SPI_DEVICE = 0
 MCP = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
-READINGS = []
+values = []
 
 def setup():
     
@@ -37,21 +40,36 @@ def setup():
 def stop():
     READ = False
 
-def ADCPOT(value):
-    max = 3.3
+def ADCPOT(digicode):
+    vref = 3.3
     levels = 1024
-    return max/(levels-1) *value
+    vin = (vref*digicode)/ (levels-1)
+    return vin
 
 def reset():
     TIMER = time.time()
 
+
+def secure_mode():
+
+    #read ADC,convert voltages and store values in log
+    while True:
+        values.insert(1, ADCPOT(MCP.read_adc(POT_CHANNEL)))
+        print("Buffer :",values)
+        updateValues()
+        time.sleep(SAMPLING_PERIOD)
+        if( values[0]-values[1]>0 ):
+            print("R")
+        else:
+            print("L")
+
+
+def updateValues():
+    if len(values)>BUFFER_MAX:
+        del values[16]
+
 def main():
 
-    pi.callback(START_SWITCH, pigpio.FALLING_EDGE,##)
-    pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE, dothings)
-      
-#SECURE MODE
-
-
-
-#UNSECURE MODE
+    ##pi.callback(START_SWITCH, pigpio.FALLING_EDGE,##)
+    ##pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE, dothings)
+    print(ADCPOT(512))
