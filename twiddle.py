@@ -71,16 +71,7 @@ def secure_mode():
         sleep(SAMPLING_PERIOD)
         if( values[0]-values[1]>0.05 ):
             print("R")
-            TICK = time.monotonic()
-            #start timer
-            while(not STATE_CHANGED):
-                sleep(SAMPLING_PERIOD)
-                if(abs(values[0]-values[1] )<0.05 or values[0]-values[1]<0.05 ):
-                    times.insert(0,time.monotonic() - TICK)
-                    print("Durations are :",times)
-                    STATE_CHANGED = True
-            #wait for state to change every 100ms
-            #stop timer if state changes
+            timethread = Durations(name = "Durations thread!")
         elif( abs(values[0]-values[1] )<0.05):
             print("constant")
         elif ( values[0]-values[1]<0.05 ):
@@ -163,6 +154,18 @@ def unsecure_check():
             return False
     return True
 
+class Durations(threading.Thread):
+    def run(self):
+        STATE_CHANGED = False
+        print("{} started!".format(self.getName()))
+        while(not STATE_CHANGED):              
+            sleep(SAMPLING_PERIOD)
+            if(abs(values[0]-values[1] )<0.05 or values[0]-values[1]<0.05 ):
+                times.insert(0,time.monotonic() - TICK)
+                print("Durations are :",times)
+                STATE_CHANGED = True                                   
+        
+        print("{} finished!".format(self.getName()))   
 if __name__ == "__main__":
     setup()
     main()
