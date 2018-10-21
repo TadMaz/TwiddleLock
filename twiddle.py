@@ -21,6 +21,8 @@ SPICS = 8
 FREQ = 100 # Frequency of reading MCP
 READ = True
 
+LOCK_MODE = 0
+
 pi =  pigpio.pi()
 SPI_PORT = 0
 SPI_DEVICE = 0
@@ -46,9 +48,17 @@ def ADCPOT(value):
 def reset():
     TIMER = time.time()
 
+def switch_lock_mode(gpio, level, tick):
+    global LOCK_MODE
+    sleep(0.5) # Debounce time of 0.5 seconds
+    if LOCK_MODE == 0:
+        LOCK_MODE = 1
+    else:
+        LOCK_MODE = 0
+
 def main():
 
-    pi.callback(START_SWITCH, pigpio.FALLING_EDGE)
+    pi.callback(START_SWITCH, pigpio.FALLING_EDGE, switch_lock_mode)
     pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE)
 
 def lock():
