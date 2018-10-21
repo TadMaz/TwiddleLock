@@ -121,5 +121,7 @@ def main():
             time.sleep(1/FREQ)
     GPIO.cleanup()
 
-main()
-GPIO.cleanup()
+
+if __name__ == "__main__":
+    main()
+    GPIO.cleanup()
