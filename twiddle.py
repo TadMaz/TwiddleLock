@@ -22,6 +22,7 @@ FREQ = 100 # Frequency of reading MCP
 READ = True
 
 LOCK_MODE = 0
+TIMER = time.time()
 
 pi =  pigpio.pi()
 SPI_PORT = 0
@@ -53,13 +54,15 @@ def switch_lock_mode(gpio, level, tick):
     sleep(0.5) # Debounce time of 0.5 seconds
     if LOCK_MODE == 0:
         LOCK_MODE = 1
+        print("Selected the unsecure mode")
     else:
         LOCK_MODE = 0
+        print("Selected the secure mode")
 
 def main():
 
-    pi.callback(START_SWITCH, pigpio.FALLING_EDGE, switch_lock_mode)
-    pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE)
+    pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE, switch_lock_mode) # Switch the mode
+    pi.callback(START_SWITCH, pigpio.FALLING_EDGE) # Start the selected mode
 
 def lock():
     pass
@@ -114,3 +117,7 @@ def unsecure_check():
         if KEY[i] != DURATIONS[i]:
             return False
     return True
+
+if __name__ == "__main__":
+    setup()
+    main()
