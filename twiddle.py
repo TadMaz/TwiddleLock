@@ -67,7 +67,7 @@ def secure_mode():
     while True:
         values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
         updateValues()
-        print("BUFFER: ",values)
+        #print("BUFFER: ",values)
         sleep(SAMPLING_PERIOD)
         if( values[0]-values[1]>0.05 ):
             print("R")
