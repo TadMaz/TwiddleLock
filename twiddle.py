@@ -60,11 +60,12 @@ def reset():
 def secure_mode():
 
     #read ADC,convert voltages and store values in log
-    values.insert(1, ADCPOT(MCP.read_adc(POT_CHANNEL)))
+    values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
     sleep(SAMPLING_PERIOD)
     while True:
-        values.insert(1, ADCPOT(MCP.read_adc(POT_CHANNEL)))
+        values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
         updateValues()
+        print("BUFFER: ",values)
         sleep(SAMPLING_PERIOD)
         if( values[0]-values[1]>0.1 ):
             print("R")
