@@ -17,7 +17,7 @@ SPIMOSI = 10
 SPICS = 8
 
 # Global variables
-FREQ = 0
+FREQ = 100 # Frequency of reading MCP
 READ = True
 
 pi =  pigpio.pi()
@@ -47,11 +47,50 @@ def reset():
 
 def main():
 
-    pi.callback(START_SWITCH, pigpio.FALLING_EDGE,##)
-    pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE, dothings)
-      
+    pi.callback(START_SWITCH, pigpio.FALLING_EDGE)
+    pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE)
+
+def lock():
+    pass
+
+
+def unlock():
+    pass
+
+
 #SECURE MODE
 
 
 
 #UNSECURE MODE
+
+DURATIONS = []
+TICK = 0
+TOCK = 0 
+KEY = [1, 1, 2]
+
+def unsecure_mode():
+    global pi, TICK, DURATIONS
+    print("Starting unsecure mode")
+    reading = MCP.read(0) # POT is on channel 0
+    while (MCP.read(0) == reading):
+        pass
+    TICK = time.monotonic()
+    print("Now taking readings")
+    while(len(DURATIONS)< 3):
+        while (reading != MCP.read(0)):
+            reading = MCP.read(0)
+            time.sleep(1/FREQ)
+        DURATIONS.append(time.monotonic() - TICK)
+    print("Code entered")
+    DURATIONS.sort()
+    print("Checking code")
+    if (unsecure_check()):
+        print("Code correct")
+        unlock()
+    else:
+        print("Code incorrect")
+        lock()
+
+def unsecure_check():
+    pass
