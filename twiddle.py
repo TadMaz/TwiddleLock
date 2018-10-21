@@ -70,6 +70,7 @@ def secure_mode():
         #print("BUFFER: ",values)
         sleep(SAMPLING_PERIOD)
         if( values[0]-values[1]>0.05 ):
+            sleep(0.05)
             print("R")
             TICK = time.monotonic()
             timethread = Durations(name = "Durations thread!")
