@@ -31,6 +31,9 @@ SPI_DEVICE = 0
 MCP = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 READINGS = []
 
+# Call back global variables
+switch_cb, start_cb = 0, 0
+
 def setup():
     
     # Set up the switch pins
@@ -61,9 +64,13 @@ def switch_lock_mode(gpio, level, tick):
         print("Selected the secure mode")
 
 def main():
+    global switch_cb, start_cb
+    switch_cb = pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE, switch_lock_mode) # Switch the mode
+    start_cb = pi.callback(START_SWITCH, pigpio.FALLING_EDGE, start) # Start the selected mode
 
-    pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE, switch_lock_mode) # Switch the mode
-    pi.callback(START_SWITCH, pigpio.FALLING_EDGE) # Start the selected mode
+
+def start(gpio, level, pin):
+    pass
 
 def lock():
     pass
