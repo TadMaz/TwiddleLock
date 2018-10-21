@@ -97,6 +97,8 @@ def unsecure_mode():
             reading = MCP.read(0)
             time.sleep(1/FREQ)
         DURATIONS.append(time.monotonic() - TICK)
+        while(reading == MCP.read(0)):
+            pass
     print("Code entered")
     DURATIONS.sort()
     print("Checking code")
