@@ -68,7 +68,7 @@ def secure_mode():
         sleep(SAMPLING_PERIOD)
         if( values[0]-values[1]>0 ):
             print("R")
-        elif( abs(values[0]-values[1] )<0.01):
+        elif( abs(values[0]-values[1] )<0.1):
             print("constant")
         else:
             print("L")
