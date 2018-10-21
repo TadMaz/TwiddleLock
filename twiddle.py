@@ -66,11 +66,11 @@ def secure_mode():
         values.insert(1, ADCPOT(MCP.read_adc(POT_CHANNEL)))
         updateValues()
         sleep(SAMPLING_PERIOD)
-        if( values[0]-values[1]>0 ):
+        if( values[0]-values[1]>0.1 ):
             print("R")
         elif( abs(values[0]-values[1] )<0.1):
             print("constant")
-        else:
+        elif ( values[0]-values[1]<0.1 ):
             print("L")
 
 def switch_lock_mode(gpio, level, tick):
