@@ -53,10 +53,10 @@ def switch_lock_mode(gpio, level, tick):
     global LOCK_MODE
     sleep(0.5) # Debounce time of 0.5 seconds
     if LOCK_MODE == 0:
-        LOCK_MODE = 1
+        LOCK_MODE = 1 # Change to unsecure mode
         print("Selected the unsecure mode")
     else:
-        LOCK_MODE = 0
+        LOCK_MODE = 0 # Change to secure mode
         print("Selected the secure mode")
 
 def main():
