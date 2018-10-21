@@ -3,6 +3,7 @@ import SPI
 import pigpio 
 import time
 import Adafruit_MCP3008
+import Adafruit_GPIO.SPI as SPI
 
 #GPIO Pins
 
