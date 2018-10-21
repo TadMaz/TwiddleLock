@@ -58,6 +58,10 @@ def unlock():
     pass
 
 
+def sleep(secs):
+    tic = time.monotonic()
+    while (time.monotonic()-tic < secs):
+        pass
 #SECURE MODE
 
 
