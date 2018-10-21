@@ -72,6 +72,7 @@ def secure_mode():
         if( values[0]-values[1]>0.05 ):
             print("R")
             timethread = Durations(name = "Durations thread!")
+            timethread.start()
         elif( abs(values[0]-values[1] )<0.05):
             print("constant")
         elif ( values[0]-values[1]<0.05 ):
