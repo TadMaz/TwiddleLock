@@ -60,25 +60,12 @@ def reset():
 
 def secure_mode():
 
-    #read ADC,convert voltages and store values in log
-    STATE_CHANGED = False
-    values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
-    sleep(SAMPLING_PERIOD)
-    while True:
-        values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
-        updateValues()
-        #print("BUFFER: ",values)
-        sleep(SAMPLING_PERIOD)
-        if( values[0]-values[1]>0.05 ):
-            sleep(0.05)
-            print("R")
-            TICK = time.monotonic()
-            timethread = Durations(name = "Durations thread!")
-            timethread.start()
-        elif( abs(values[0]-values[1] )<0.05):
-            print("constant")
-        elif ( values[0]-values[1]<0.05 ):
-            print("L")
+    #start Directions and Duration threads
+    direc  = Directions(name = "Directions thread")
+    durat  = Durations(name = "Durartions thread")
+    
+    direc.start()
+    durat.start()
 
 def switch_lock_mode(gpio, level, tick):
     global LOCK_MODE
@@ -167,8 +154,25 @@ class Durations(threading.Thread):
                 times.insert(0,time.monotonic() - TICK)
                 print("Durations are :",times)
                 STATE_CHANGED = True                                   
-        
-        print("{} finished!".format(self.getName()))   
+
+class Directions(threading.Thread):
+    def run(self):
+        print("{} started!".format(self.getName()))
+        values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
+        sleep(SAMPLING_PERIOD)
+        while True:
+            values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
+            updateValues()
+            #print("BUFFER: ",values)
+            sleep(SAMPLING_PERIOD)
+            if( values[0]-values[1]>0.05 ):
+                sleep(0.05)
+                print("R")
+            elif( abs(values[0]-values[1] )<0.05):
+                print("constant")
+            elif ( values[0]-values[1]<0.05 ):
+                print("L")
+                                          
 if __name__ == "__main__":
     setup()
     main()
