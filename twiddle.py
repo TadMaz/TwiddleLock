@@ -150,9 +150,10 @@ class Durations(threading.Thread):
         print("{} started!".format(self.getName()))
         while True:
             STATE_CHANGED = False
+            TICK = time.monotonic()
             while(not STATE_CHANGED):              
                 sleep(SAMPLING_PERIOD)
-                if(abs(values[0]-values[1] )<0.05 or values[0]-values[1]<0.05 ):
+                if(values[0]-values[1] <0.05 ):
                     times.insert(0,time.monotonic() - TICK)
                     updateBuffer(times)
                     print("Durations are :",times)
