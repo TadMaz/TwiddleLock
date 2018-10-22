@@ -1,6 +1,7 @@
 import spidev
 import pigpio 
 import time
+import RPi.GPIO as GPIO
 import Adafruit_MCP3008
 import Adafruit_GPIO.SPI as SPI
 import threading
@@ -27,7 +28,7 @@ SAMPLING_PERIOD = 0.2
 LOCK_MODE = 0
 TIMER = time.time()
 
-pi =  pigpio.pi()
+GPIO.set_mode(GPIO.BCM)
 SPI_PORT = 0
 SPI_DEVICE = 0
 MCP = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
@@ -42,10 +43,8 @@ switch_cb, start_cb = 0, 0
 def setup():
     
     # Set up the switch pins
-    pi.set_mode(START_SWITCH, pigpio.INPUT)
-    pi.set_mode(MODE_SWITCH, pigpio.INPUT)
-    pi.set_pull_up_down(START_SWITCH, pigpio.PUD_UP)
-    pi.set_pull_up_down(MODE_SWITCH, pigpio.PUD_UP)
+    GPIO.setup(START_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(MODE_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 def stop():
     READ = False
@@ -82,13 +81,15 @@ def switch_lock_mode(gpio, level, tick):
 
 def main():
     global switch_cb, start_cb
-    switch_cb = pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE, switch_lock_mode) # Switch the mode
-    start_cb = pi.callback(START_SWITCH, pigpio.FALLING_EDGE, start) # Start the selected mode
+    GPIO.add_event_detect(MODE_SWITCH, GPIO.FALLING_EDGE, callback=switch_lock_mode) # Switch the mode
+    GPIO.add_event_detect(START_SWITCH, GPIO.FALLING_EDGE, callback=start) # Start the selected mode
     while (True):
         pass
     
 
 def start(gpio, level, pin):
+    GPIO.remove_event_detect(START_SWITCH)
+    GPIO.remove_event_detect(MODE_SWITCH)
     sleep(1)
     if LOCK_MODE == 0:
         secure_mode()
@@ -218,10 +219,10 @@ class Directions(threading.Thread):
 
 def exit_by_delay():
     print("Exiting")
-    pi.stop()
+    GPIO.cleanup()
     exit()
 
 if __name__ == "__main__":
     setup()
     main()
-    pi.stop()
+    GPIO.cleanup()
