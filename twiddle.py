@@ -153,8 +153,8 @@ class Durations(threading.Thread):
             TICK = time.monotonic()
             while(not STATE_CHANGED):              
                 sleep(SAMPLING_PERIOD)
-                if(values[0]-values[1] <-0.05 ):
-                    while(values[0]-values[1] <-0.5):
+                if(values[0]-values[1] <-0.1 ):
+                    while(values[0]-values[1] <-0.1):
                         continue
                     times.insert(0,time.monotonic() - TICK)
                     updateBuffer(times)
