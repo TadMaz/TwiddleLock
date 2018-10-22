@@ -34,7 +34,7 @@ SPI_DEVICE = 0
 MCP = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 values = []
 times = []
-durations_list = []
+durations_list = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 directions_list = []
 
 # Call back global variables
