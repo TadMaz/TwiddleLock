@@ -153,7 +153,7 @@ class Durations(threading.Thread):
             TICK = time.monotonic()
             while(not STATE_CHANGED):              
                 sleep(SAMPLING_PERIOD)
-                if(values[0]-values[1] <0.05 ):
+                if(values[0]-values[1] <-0.05 ):
                     times.insert(0,time.monotonic() - TICK)
                     updateBuffer(times)
                     print("Durations are :",times)
@@ -174,7 +174,7 @@ class Directions(threading.Thread):
                 print("R")
             elif( abs(values[0]-values[1] )<0.05):
                 print("constant")
-            elif ( values[0]-values[1]<0.05 ):
+            elif ( values[0]-values[1]<-0.05 ):
                 print("L")
                                           
 if __name__ == "__main__":
