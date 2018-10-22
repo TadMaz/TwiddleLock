@@ -199,7 +199,14 @@ class Directions(threading.Thread):
                     values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
                     sleep(SAMPLING_PERIOD)
                 print("R")                          
-                                          
+
+
+def exit_by_delay():
+    print("Exiting")
+    pi.cleanup()
+    exit()
+
 if __name__ == "__main__":
     setup()
     main()
+    pi.cleanup()
