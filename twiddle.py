@@ -129,14 +129,14 @@ KEY = [1, 1, 2]
 def unsecure_mode():
     global pi, TICK, DURATIONS
     print("Starting unsecure mode")
-    reading = MCP.read_adc(0) # POT is on channel 0
-    while (round(ADCPOT(MCP.read_adc(0)), 2) == reading):
+    reading = round(ADCPOT(MCP.read_adc(0)), 1)  # POT is on channel 0
+    while (round(ADCPOT(MCP.read_adc(0)), 1) == reading):
         pass
     TICK = time.monotonic()
     print("Now taking readings")
     while(len(DURATIONS)< len(KEY)):
-        while (reading != round(ADCPOT(MCP.read_adc(0)), 2)):
-            reading = MCP.read_adc(0)
+        while (reading != round(ADCPOT(MCP.read_adc(0)), 1)):
+            reading = round(ADCPOT(MCP.read_adc(0)), 1)
             time.sleep(1/FREQ)
         DURATIONS.append(time.monotonic() - TICK)
         while(reading == round(ADCPOT(MCP.read_adc(0)), 2)):
@@ -145,9 +145,11 @@ def unsecure_mode():
     DURATIONS.sort()
     print("Checking code")
     if (unsecure_check()):
+        print(DURATIONS)
         print("Code correct")
         unlock()
     else:
+        print(DURATIONS)
         print("Code incorrect")
         lock()
 
