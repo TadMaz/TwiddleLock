@@ -155,6 +155,7 @@ class Durations(threading.Thread):
                 sleep(SAMPLING_PERIOD)
                 if(values[0]-values[1] <-0.05 ):
                     while(values[0]-values[1] <-0.05):
+                        continue
                     times.insert(0,time.monotonic() - TICK)
                     updateBuffer(times)
                     print("Durations are :",times)
