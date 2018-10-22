@@ -81,8 +81,8 @@ def switch_lock_mode(gpio, level, tick):
 
 def main():
     global switch_cb, start_cb
-    GPIO.add_event_detect(MODE_SWITCH, GPIO.FALLING_EDGE, callback=switch_lock_mode, bouncetime=200) # Switch the mode
-    GPIO.add_event_detect(START_SWITCH, GPIO.FALLING_EDGE, callback=start, bouncetime=200) # Start the selected mode
+    GPIO.add_event_detect(MODE_SWITCH, GPIO.FALLING_EDGE, callback=switch_lock_mode, bouncetime=400) # Switch the mode
+    GPIO.add_event_detect(START_SWITCH, GPIO.FALLING_EDGE, callback=start, bouncetime=400) # Start the selected mode
     while (True):
         pass
     
