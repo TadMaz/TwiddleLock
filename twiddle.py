@@ -34,7 +34,7 @@ SPI_DEVICE = 0
 MCP = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 values = []
 times = []
-durations_list = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+durations_list = []
 directions_list = []
 
 # Call back global variables
@@ -117,8 +117,8 @@ def updateBuffer(buffer):
             del buffer[i]
 
 def updateDurations():
-    for i in range(len(times)-1):
-        durations_list[i] = round(times[i])
+    for i in times:
+        durations_list.append(round(times[i]))
     updateBuffer(durations_list)
 
 #UNSECURE MODE
