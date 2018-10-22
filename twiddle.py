@@ -189,7 +189,7 @@ class Durations(threading.Thread):
                     #updateDurations()
                     print("Durations are :",times)
                     STATE_CHANGED = True
-                elif ( time.monotonic() - TICK>2 and abs(values[0]-values[1])<0.1 ):
+                elif ( time.monotonic() - TICK>2 ):
                     exit_by_delay()
 
 
@@ -210,13 +210,15 @@ class Directions(threading.Thread):
                     sleep(SAMPLING_PERIOD)
                 print("L")
                 directions_list.insert(0,"L")
+                updateBuffer(directions_list)
                 #print("constant")
             elif ( values[0]-values[1]<-0.1 ):                 #when values decrease->right
                 while(values[0]-values[1] <-0.1):              #check whether it is still increasing
                     values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
                     sleep(SAMPLING_PERIOD)    
                 print("R") 
-                directions_list.insert(0,"R")                         
+                directions_list.insert(0,"R")
+                updateBuffer(directions_list)                         
 
 
 def exit_by_delay():
