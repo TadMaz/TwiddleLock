@@ -113,7 +113,7 @@ def sleep(secs):
 
 def updateBuffer(buffer):
     if len(buffer) > BUFFER_MAX:
-        for i in range(len(buffer),15):
+        for i in range(len(buffer)-1,BUFFER_MAX-1,-1):
             del buffer[i]
 
 def updateDurations():
