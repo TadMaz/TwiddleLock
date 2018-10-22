@@ -82,10 +82,14 @@ def main():
     global switch_cb, start_cb
     switch_cb = pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE, switch_lock_mode) # Switch the mode
     start_cb = pi.callback(START_SWITCH, pigpio.FALLING_EDGE, start) # Start the selected mode
-    secure_mode()
+    
 
 def start(gpio, level, pin):
-    pass
+    sleep(1)
+    if LOCK_MODE == 0:
+        secure_mode()
+    else:
+        unsecure_mode()
 
 def lock():
     pass
