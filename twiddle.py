@@ -189,7 +189,7 @@ class Durations(threading.Thread):
                     #updateDurations()
                     print("Durations are :",times)
                     STATE_CHANGED = True
-                elif ( time.monotonic() - TICK>2  ):
+                elif ( time.monotonic() - TICK>2 and abs(values[0]-values[1])<0.1 ):
                     exit_by_delay()
 
 
