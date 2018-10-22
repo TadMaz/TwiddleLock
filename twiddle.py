@@ -44,8 +44,8 @@ def setup():
     # Set up the switch pins
     pi.set_mode(START_SWITCH, pigpio.INPUT)
     pi.set_mode(MODE_SWITCH, pigpio.INPUT)
-    pi.set_pull_up_down(START_SWITCH, pigpio.PUD_DOWN)
-    pi.set_pull_up_down(MODE_SWITCH, pigpio.PUD_DOWN)
+    pi.set_pull_up_down(START_SWITCH, pigpio.PUD_UP)
+    pi.set_pull_up_down(MODE_SWITCH, pigpio.PUD_UP)
 
 def stop():
     READ = False
@@ -212,10 +212,10 @@ class Directions(threading.Thread):
 
 def exit_by_delay():
     print("Exiting")
-    pi.cleanup()
+    pi.stop()
     exit()
 
 if __name__ == "__main__":
     setup()
     main()
-    pi.cleanup()
+    pi.stop()
