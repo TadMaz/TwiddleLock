@@ -65,6 +65,7 @@ def secure_mode():
     durat  = Durations(name = "Durartions thread")
     
     direc.start()
+    sleep(SAMPLING_PERIOD)
     durat.start()
 
 def switch_lock_mode(gpio, level, tick):
@@ -147,6 +148,7 @@ def unsecure_check():
 class Durations(threading.Thread):
     def run(self):
         STATE_CHANGED = False
+
         print("{} started!".format(self.getName()))
         while(not STATE_CHANGED):              
             sleep(SAMPLING_PERIOD)
