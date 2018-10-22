@@ -62,10 +62,10 @@ def secure_mode():
 
     #read ADC,convert voltages and store values in log
     STATE_CHANGED = False
-    values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
+    values.insert(0, round(ADCPOT(MCP.read_adc(POT_CHANNEL)),2))
     sleep(SAMPLING_PERIOD)
     while True:
-        values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
+        values.insert(0, round(ADCPOT(MCP.read_adc(POT_CHANNEL)),2))
         updateValues()
         #print("BUFFER: ",values)
         sleep(SAMPLING_PERIOD)
@@ -130,16 +130,16 @@ def unsecure_mode():
     global pi, TICK, DURATIONS
     print("Starting unsecure mode")
     reading = MCP.read(0) # POT is on channel 0
-    while (MCP.read(0) == reading):
+    while (round(ADCPOT(MCP.read(0)), 2) == reading):
         pass
     TICK = time.monotonic()
     print("Now taking readings")
     while(len(DURATIONS)< len(KEY)):
-        while (reading != MCP.read(0)):
+        while (reading != round(ADCPOT(MCP.read(0)), 2)):
             reading = MCP.read(0)
             time.sleep(1/FREQ)
         DURATIONS.append(time.monotonic() - TICK)
-        while(reading == MCP.read(0)):
+        while(reading == round(ADCPOT(MCP.read(0)), 2)):
             pass
     print("Code entered")
     DURATIONS.sort()
