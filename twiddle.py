@@ -182,18 +182,15 @@ class Directions(threading.Thread):
             sleep(SAMPLING_PERIOD)
             if( values[0]-values[1]>0.1 ):                     #when values increase->left
                 while(values[0]-values[1] >0.1):              #check whether it is still increasing
-                    sleep(0.05)                      
-                    continue
+                    pass
                 print("L")
             elif( abs(values[0]-values[1] )<0.1):
                 while( abs(values[0]-values[1] )<0.1 ):              #check whether it is still increasing
-                    sleep(0.05)                      
-                    continue
+                    pass
                 print("constant")
             elif ( values[0]-values[1]<-0.1 ):                 #when values decrease->right
                 while(values[0]-values[1] <-0.1):              #check whether it is still increasing
-                    sleep(0.05)                      
-                    continue
+                    pass
                 print("R")                          
                                           
 if __name__ == "__main__":
