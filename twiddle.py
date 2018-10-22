@@ -177,8 +177,8 @@ class Durations(threading.Thread):
                         continue
                     times.insert(0,time.monotonic() - TICK)
                     updateBuffer(times)
-                    updateDurations()
-                    print("Durations are :",durations_list)
+                    #updateDurations()
+                    print("Durations are :",times)
                     STATE_CHANGED = True
                 elif( values[0]-values[1] >0.1 ):       #moving to left
                     while( values[0]-values[1] >0.1 ):
@@ -186,8 +186,8 @@ class Durations(threading.Thread):
                         continue
                     times.insert(0,time.monotonic() - TICK)
                     updateBuffer(times)
-                    updateDurations()
-                    print("Durations are :",durations_list)
+                    #updateDurations()
+                    print("Durations are :",times)
                     STATE_CHANGED = True
                 elif ( time.monotonic() - TICK>2  ):
                     exit_by_delay()
