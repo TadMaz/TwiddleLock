@@ -82,6 +82,8 @@ def main():
     global switch_cb, start_cb
     switch_cb = pi.callback(MODE_SWITCH, pigpio.FALLING_EDGE, switch_lock_mode) # Switch the mode
     start_cb = pi.callback(START_SWITCH, pigpio.FALLING_EDGE, start) # Start the selected mode
+    while (True):
+        pass
     
 
 def start(gpio, level, pin):
