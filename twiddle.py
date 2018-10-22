@@ -203,10 +203,10 @@ class Directions(threading.Thread):
 
 def exit_by_delay():
     print("Exiting")
-    pi.cleanup()
+    pi.stop()
     exit()
 
 if __name__ == "__main__":
     setup()
     main()
-    pi.cleanup()
+    pi.stop()
