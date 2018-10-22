@@ -153,9 +153,17 @@ class Durations(threading.Thread):
             TICK = time.monotonic()
             while(not STATE_CHANGED):              
                 sleep(SAMPLING_PERIOD)
-                if(values[0]-values[1] <-0.1 ):
+                if(values[0]-values[1] <-0.1 ):          #moving to right
                     while(values[0]-values[1] <-0.1):
-                        sleep(0.05)
+                        sleep(0.05)                      #check whether it is still increasing
+                        continue
+                    times.insert(0,time.monotonic() - TICK)
+                    updateBuffer(times)
+                    print("Durations are :",times)
+                    STATE_CHANGED = True
+                elif( values[0]-values[1] >0.1 ):       #moving to left
+                    while( values[0]-values[1] >0.1 ):
+                        sleep(0.05)                     #check whether it is still increasing
                         continue
                     times.insert(0,time.monotonic() - TICK)
                     updateBuffer(times)
@@ -172,13 +180,15 @@ class Directions(threading.Thread):
             updateBuffer(values)
             #print("BUFFER: ",values)
             sleep(SAMPLING_PERIOD)
-            if( values[0]-values[1]>0.1 ):
-                sleep(0.05)
-                print("R")
-            elif( abs(values[0]-values[1] )<0.1):
-                print("constant")
-            elif ( values[0]-values[1]<-0.1 ):
+            if( values[0]-values[1]>0.1 ):                     #when values increase->left
+                sleep(0.05)                                    #debounce
                 print("L")
+            elif( abs(values[0]-values[1] )<0.1):
+                sleep(0.05)
+                print("constant")
+            elif ( values[0]-values[1]<-0.1 ):                 #when values decrease->right
+                sleep(0.05)
+                print("R")                          
                                           
 if __name__ == "__main__":
     setup()
