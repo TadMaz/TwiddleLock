@@ -136,7 +136,7 @@ def unsecure_mode():
     print("Now taking readings")
     while(len(DURATIONS)< len(KEY)):
         while (reading != round(ADCPOT(MCP.read_adc(0)), 2)):
-            reading = MCP.read(0)
+            reading = MCP.read_adc(0)
             time.sleep(1/FREQ)
         DURATIONS.append(time.monotonic() - TICK)
         while(reading == round(ADCPOT(MCP.read_adc(0)), 2)):
