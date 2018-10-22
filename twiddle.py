@@ -118,7 +118,7 @@ def updateBuffer(buffer):
 
 def updateDurations():
     for i in times:
-        durations_list.append(round(times[i]))
+        durations_list.append( round(i) )
     updateBuffer(durations_list)
 
 #UNSECURE MODE
