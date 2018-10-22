@@ -19,7 +19,7 @@ SPIMOSI = 10
 SPICS = 8
 
 # Global variables
-FREQ = 100 # Frequency of reading MCP
+FREQ = 20 # Frequency of reading MCP
 READ = True
 POT_CHANNEL = 0
 BUFFER_MAX = 16
@@ -137,8 +137,8 @@ def unsecure_mode():
     print("Now taking readings")
     while(len(DURATIONS)< len(KEY)):
         while (reading != round(ADCPOT(MCP.read_adc(0)), 2)):
-            reading = round(ADCPOT(MCP.read_adc(0)), 2)
             time.sleep(1/FREQ)
+            reading = round(ADCPOT(MCP.read_adc(0)), 2)
         DURATIONS.append(round(time.monotonic() - TICK, 1))
         while(reading == round(ADCPOT(MCP.read_adc(0)), 2)):
             pass
