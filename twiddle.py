@@ -129,7 +129,7 @@ KEY = [1, 1, 2]
 def unsecure_mode():
     global pi, TICK, DURATIONS
     print("Starting unsecure mode")
-    reading = MCP.read(0) # POT is on channel 0
+    reading = MCP.read_adc(0) # POT is on channel 0
     while (round(ADCPOT(MCP.read_adc(0)), 2) == reading):
         pass
     TICK = time.monotonic()
