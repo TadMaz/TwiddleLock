@@ -97,11 +97,11 @@ def start(gpio):
         unsecure_mode()
 
 def lock():
-    pass
+    print("Locked")
 
 
 def unlock():
-    pass
+    print("Unlocked")
 
 
 def sleep(secs):
@@ -132,16 +132,16 @@ def unsecure_mode():
     global pi, TICK, DURATIONS
     print("Starting unsecure mode")
     reading = round(ADCPOT(MCP.read_adc(0)), 2)  # POT is on channel 0
-    while (round(ADCPOT(MCP.read_adc(0)), 2) == reading):
+    while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) <= 0.2):
         pass
     TICK = time.monotonic()
     print("Now taking readings")
     while(len(DURATIONS)< len(KEY)):
-        while (reading != round(ADCPOT(MCP.read_adc(0)), 2)):
+        while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) > 0.2):
             time.sleep(1/FREQ)
             reading = round(ADCPOT(MCP.read_adc(0)), 2)
         DURATIONS.append(round(time.monotonic() - TICK, 1))
-        while(reading == round(ADCPOT(MCP.read_adc(0)), 2)):
+        while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) <= 0.2):
             pass
     print("Code entered")
     DURATIONS.sort()
