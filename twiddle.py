@@ -138,8 +138,8 @@ def unsecure_mode():
     print("Now taking readings")
     while(len(DURATIONS)< len(KEY)):
         while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) > 0.2):
-            time.sleep(1/FREQ)
             reading = round(ADCPOT(MCP.read_adc(0)), 2)
+            time.sleep(1/FREQ)
         DURATIONS.append(round(time.monotonic() - TICK, 1))
         while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) <= 0.2):
             pass
