@@ -141,7 +141,6 @@ def unsecure_mode():
         while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) > 0.2):
             reading = round(ADCPOT(MCP.read_adc(0)), 2)
             time.sleep(1/FREQ)
-            print(reading)
         DURATIONS.append(round(time.monotonic() - TICK, 1))
         TICK = time.monotonic()
         while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) <= 0.2):
