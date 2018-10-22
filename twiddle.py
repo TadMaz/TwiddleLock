@@ -168,7 +168,11 @@ class Durations(threading.Thread):
                     times.insert(0,time.monotonic() - TICK)
                     updateBuffer(times)
                     print("Durations are :",times)
-                    STATE_CHANGED = True                                   
+                    STATE_CHANGED = True
+                elif ( time.monotonic() - TICK>2  ):
+                    exit_by_delay()
+
+
 
 class Directions(threading.Thread):
     def run(self):
