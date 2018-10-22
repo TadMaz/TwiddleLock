@@ -22,7 +22,7 @@ FREQ = 100 # Frequency of reading MCP
 READ = True
 POT_CHANNEL = 0
 BUFFER_MAX = 16
-SAMPLING_PERIOD = 0.1
+SAMPLING_PERIOD = 0.2
 
 LOCK_MODE = 0
 TIMER = time.time()
