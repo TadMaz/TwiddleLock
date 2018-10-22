@@ -103,8 +103,8 @@ def sleep(secs):
 
 
 def updateBuffer(buffer):
-    if len(buffer)>BUFFER_MAX:
-        del values[16]
+    if len(buffer) > BUFFER_MAX:
+        del buffer[16]
 
 
 #UNSECURE MODE
