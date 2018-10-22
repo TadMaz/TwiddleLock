@@ -102,8 +102,8 @@ def sleep(secs):
 #SECURE MODE
 
 
-def updateValues():
-    if len(values)>BUFFER_MAX:
+def updateBuffer(buffer):
+    if len(buffer)>BUFFER_MAX:
         del values[16]
 
 
@@ -147,14 +147,14 @@ def unsecure_check():
 
 class Durations(threading.Thread):
     def run(self):
+        print("{} started!".format(self.getName()))
         while True:
             STATE_CHANGED = False
-
-            print("{} started!".format(self.getName()))
             while(not STATE_CHANGED):              
                 sleep(SAMPLING_PERIOD)
                 if(abs(values[0]-values[1] )<0.05 or values[0]-values[1]<0.05 ):
                     times.insert(0,time.monotonic() - TICK)
+                    updateBuffer(times)
                     print("Durations are :",times)
                     STATE_CHANGED = True                                   
 
@@ -165,7 +165,7 @@ class Directions(threading.Thread):
         sleep(SAMPLING_PERIOD)
         while True:
             values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
-            updateValues()
+            updateBuffer(values)
             #print("BUFFER: ",values)
             sleep(SAMPLING_PERIOD)
             if( values[0]-values[1]>0.05 ):
