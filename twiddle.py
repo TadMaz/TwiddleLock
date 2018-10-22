@@ -172,12 +172,12 @@ class Directions(threading.Thread):
             updateBuffer(values)
             #print("BUFFER: ",values)
             sleep(SAMPLING_PERIOD)
-            if( values[0]-values[1]>0.05 ):
+            if( values[0]-values[1]>0.1 ):
                 sleep(0.05)
                 print("R")
-            elif( abs(values[0]-values[1] )<0.05):
+            elif( abs(values[0]-values[1] )<0.1):
                 print("constant")
-            elif ( values[0]-values[1]<-0.05 ):
+            elif ( values[0]-values[1]<-0.1 ):
                 print("L")
                                           
 if __name__ == "__main__":
