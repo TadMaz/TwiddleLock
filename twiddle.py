@@ -147,15 +147,16 @@ def unsecure_check():
 
 class Durations(threading.Thread):
     def run(self):
-        STATE_CHANGED = False
+        while True:
+            STATE_CHANGED = False
 
-        print("{} started!".format(self.getName()))
-        while(not STATE_CHANGED):              
-            sleep(SAMPLING_PERIOD)
-            if(abs(values[0]-values[1] )<0.05 or values[0]-values[1]<0.05 ):
-                times.insert(0,time.monotonic() - TICK)
-                print("Durations are :",times)
-                STATE_CHANGED = True                                   
+            print("{} started!".format(self.getName()))
+            while(not STATE_CHANGED):              
+                sleep(SAMPLING_PERIOD)
+                if(abs(values[0]-values[1] )<0.05 or values[0]-values[1]<0.05 ):
+                    times.insert(0,time.monotonic() - TICK)
+                    print("Durations are :",times)
+                    STATE_CHANGED = True                                   
 
 class Directions(threading.Thread):
     def run(self):
