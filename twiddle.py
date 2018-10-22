@@ -19,7 +19,7 @@ SPIMOSI = 10
 SPICS = 8
 
 # Global variables
-FREQ = 20 # Frequency of reading MCP
+FREQ = 10 # Frequency of reading MCP
 READ = True
 POT_CHANNEL = 0
 BUFFER_MAX = 16
@@ -81,8 +81,8 @@ def switch_lock_mode(gpio):
 
 def main():
     global switch_cb, start_cb
-    GPIO.add_event_detect(MODE_SWITCH, GPIO.FALLING, callback=switch_lock_mode, bouncetime=400) # Switch the mode
-    GPIO.add_event_detect(START_SWITCH, GPIO.FALLING, callback=start, bouncetime=400) # Start the selected mode
+    GPIO.add_event_detect(MODE_SWITCH, GPIO.FALLING, callback=switch_lock_mode, bouncetime=1000) # Switch the mode
+    GPIO.add_event_detect(START_SWITCH, GPIO.FALLING, callback=start, bouncetime=1000) # Start the selected mode
     while (True):
         pass
     
@@ -132,15 +132,18 @@ def unsecure_mode():
     global pi, TICK, DURATIONS
     print("Starting unsecure mode")
     reading = round(ADCPOT(MCP.read_adc(0)), 2)  # POT is on channel 0
+    print(reading)
     while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) <= 0.2):
         pass
     TICK = time.monotonic()
     print("Now taking readings")
     while(len(DURATIONS)< len(KEY)):
         while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) > 0.2):
-            time.sleep(1/FREQ)
             reading = round(ADCPOT(MCP.read_adc(0)), 2)
+            time.sleep(1/FREQ)
+            print(reading)
         DURATIONS.append(round(time.monotonic() - TICK, 1))
+        TICK = time.monotonic()
         while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) <= 0.2):
             pass
     print("Code entered")
