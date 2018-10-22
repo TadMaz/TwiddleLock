@@ -28,7 +28,7 @@ SAMPLING_PERIOD = 0.2
 LOCK_MODE = 0
 TIMER = time.time()
 
-GPIO.set_mode(GPIO.BCM)
+GPIO.setmode(GPIO.BCM)
 SPI_PORT = 0
 SPI_DEVICE = 0
 MCP = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
@@ -69,7 +69,7 @@ def secure_mode():
     sleep(SAMPLING_PERIOD)
     durat.start()
 
-def switch_lock_mode(gpio, level, tick):
+def switch_lock_mode(gpio):
     global LOCK_MODE
     sleep(0.5) # Debounce time of 0.5 seconds
     if LOCK_MODE == 0:
@@ -81,13 +81,13 @@ def switch_lock_mode(gpio, level, tick):
 
 def main():
     global switch_cb, start_cb
-    GPIO.add_event_detect(MODE_SWITCH, GPIO.FALLING_EDGE, callback=switch_lock_mode) # Switch the mode
-    GPIO.add_event_detect(START_SWITCH, GPIO.FALLING_EDGE, callback=start) # Start the selected mode
+    GPIO.add_event_detect(MODE_SWITCH, GPIO.FALLING, callback=switch_lock_mode) # Switch the mode
+    GPIO.add_event_detect(START_SWITCH, GPIO.FALLING, callback=start) # Start the selected mode
     while (True):
         pass
     
 
-def start(gpio, level, pin):
+def start(gpio):
     GPIO.remove_event_detect(START_SWITCH)
     GPIO.remove_event_detect(MODE_SWITCH)
     sleep(1)
