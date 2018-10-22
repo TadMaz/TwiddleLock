@@ -181,13 +181,19 @@ class Directions(threading.Thread):
             #print("BUFFER: ",values)
             sleep(SAMPLING_PERIOD)
             if( values[0]-values[1]>0.1 ):                     #when values increase->left
-                sleep(0.05)                                    #debounce
+                while(values[0]-values[1] >0.1):              #check whether it is still increasing
+                    sleep(0.05)                      
+                    continue
                 print("L")
             elif( abs(values[0]-values[1] )<0.1):
-                sleep(0.05)
+                while( abs(values[0]-values[1] )<0.1 ):              #check whether it is still increasing
+                    sleep(0.05)                      
+                    continue
                 print("constant")
             elif ( values[0]-values[1]<-0.1 ):                 #when values decrease->right
-                sleep(0.05)
+                while(values[0]-values[1] <-0.1):              #check whether it is still increasing
+                    sleep(0.05)                      
+                    continue
                 print("R")                          
                                           
 if __name__ == "__main__":
