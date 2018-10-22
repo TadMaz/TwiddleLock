@@ -167,7 +167,6 @@ class Directions(threading.Thread):
             updateValues()
             #print("BUFFER: ",values)
             sleep(SAMPLING_PERIOD)
-            print("Values are :",values)
             if( values[0]-values[1]>0.05 ):
                 sleep(0.05)
                 print("R")
