@@ -113,7 +113,8 @@ def sleep(secs):
 
 def updateBuffer(buffer):
     if len(buffer) > BUFFER_MAX:
-        del buffer[16]
+        for i in range(len(buffer),15):
+            del buffer[i]
 
 def updateDurations():
     for i in times:
@@ -205,10 +206,6 @@ class Directions(threading.Thread):
                     sleep(SAMPLING_PERIOD)
                 print("L")
                 directions_list.insert(0,"L")
-            elif( abs(values[0]-values[1] )<0.1):
-                while( abs(values[0]-values[1] )<0.1 ):              #check whether it is still increasing
-                    values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
-                    sleep(SAMPLING_PERIOD)
                 #print("constant")
             elif ( values[0]-values[1]<-0.1 ):                 #when values decrease->right
                 while(values[0]-values[1] <-0.1):              #check whether it is still increasing
