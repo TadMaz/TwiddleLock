@@ -28,7 +28,7 @@ SAMPLING_PERIOD = 0.2
 LOCK_MODE = 0
 TIMER = time.time()
 
-GPIO.set_mode(GPIO.BCM)
+GPIO.setmode(GPIO.BCM)
 SPI_PORT = 0
 SPI_DEVICE = 0
 MCP = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
@@ -69,7 +69,7 @@ def secure_mode():
     sleep(SAMPLING_PERIOD)
     durat.start()
 
-def switch_lock_mode(gpio, level, tick):
+def switch_lock_mode(gpio):
     global LOCK_MODE
     sleep(0.5) # Debounce time of 0.5 seconds
     if LOCK_MODE == 0:
@@ -81,13 +81,13 @@ def switch_lock_mode(gpio, level, tick):
 
 def main():
     global switch_cb, start_cb
-    GPIO.add_event_detect(MODE_SWITCH, GPIO.FALLING_EDGE, callback=switch_lock_mode) # Switch the mode
-    GPIO.add_event_detect(START_SWITCH, GPIO.FALLING_EDGE, callback=start) # Start the selected mode
+    GPIO.add_event_detect(MODE_SWITCH, GPIO.FALLING, callback=switch_lock_mode, bouncetime=400) # Switch the mode
+    GPIO.add_event_detect(START_SWITCH, GPIO.FALLING, callback=start, bouncetime=400) # Start the selected mode
     while (True):
         pass
     
 
-def start(gpio, level, pin):
+def start(gpio):
     GPIO.remove_event_detect(START_SWITCH)
     GPIO.remove_event_detect(MODE_SWITCH)
     sleep(1)
@@ -130,16 +130,16 @@ def unsecure_mode():
     global pi, TICK, DURATIONS
     print("Starting unsecure mode")
     reading = MCP.read(0) # POT is on channel 0
-    while (round(ADCPOT(MCP.read(0)), 2) == reading):
+    while (round(ADCPOT(MCP.read_adc(0)), 2) == reading):
         pass
     TICK = time.monotonic()
     print("Now taking readings")
     while(len(DURATIONS)< len(KEY)):
-        while (reading != round(ADCPOT(MCP.read(0)), 2)):
+        while (reading != round(ADCPOT(MCP.read_adc(0)), 2)):
             reading = MCP.read(0)
             time.sleep(1/FREQ)
         DURATIONS.append(time.monotonic() - TICK)
-        while(reading == round(ADCPOT(MCP.read(0)), 2)):
+        while(reading == round(ADCPOT(MCP.read_adc(0)), 2)):
             pass
     print("Code entered")
     DURATIONS.sort()
