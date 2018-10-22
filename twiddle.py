@@ -33,6 +33,8 @@ SPI_DEVICE = 0
 MCP = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 values = []
 times = []
+durations_list = []
+directions_list = []
 
 # Call back global variables
 switch_cb, start_cb = 0, 0
@@ -112,6 +114,9 @@ def updateBuffer(buffer):
     if len(buffer) > BUFFER_MAX:
         del buffer[16]
 
+def updateDurations():
+    for i in times:
+        durations_list.append(round(i))
 
 #UNSECURE MODE
 
@@ -165,7 +170,8 @@ class Durations(threading.Thread):
                         continue
                     times.insert(0,time.monotonic() - TICK)
                     updateBuffer(times)
-                    print("Durations are :",times)
+                    updateDurations()
+                    print("Durations are :",durations_list)
                     STATE_CHANGED = True
                 elif( values[0]-values[1] >0.1 ):       #moving to left
                     while( values[0]-values[1] >0.1 ):
@@ -173,7 +179,8 @@ class Durations(threading.Thread):
                         continue
                     times.insert(0,time.monotonic() - TICK)
                     updateBuffer(times)
-                    print("Durations are :",times)
+                    updateDurations()
+                    print("Durations are :",durations_list)
                     STATE_CHANGED = True
                 elif ( time.monotonic() - TICK>2  ):
                     exit_by_delay()
@@ -195,16 +202,18 @@ class Directions(threading.Thread):
                     values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
                     sleep(SAMPLING_PERIOD)
                 print("L")
+                directions_list.insert(0,"L")
             elif( abs(values[0]-values[1] )<0.1):
                 while( abs(values[0]-values[1] )<0.1 ):              #check whether it is still increasing
                     values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
                     sleep(SAMPLING_PERIOD)
-                print("constant")
+                #print("constant")
             elif ( values[0]-values[1]<-0.1 ):                 #when values decrease->right
                 while(values[0]-values[1] <-0.1):              #check whether it is still increasing
                     values.insert(0, ADCPOT(MCP.read_adc(POT_CHANNEL)))
-                    sleep(SAMPLING_PERIOD)
-                print("R")                          
+                    sleep(SAMPLING_PERIOD)    
+                print("R") 
+                directions_list.insert(0,"R")                         
 
 
 def exit_by_delay():
