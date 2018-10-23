@@ -1,114 +1,121 @@
-/* SELECTION SORT  */
+/******************************************************************************
+* @file array.s
+* @brief simple array declaration and iteration example
+*
+* Simple example of declaring a fixed-width array and traversing over the
+* elements for printing.
+*
 
-.text
+******************************************************************************/
+ 
 .global main
+.func main
+   
 main:
-@@@@@@@@@@@@@@@@@ INITIALIZE
-    ldr r7, =return @ get ready to save
-    str lr, [r7] @ link register for return
-    mov r6, #0 @ keep count in r6
-    ldr r4, =array @ keep constant &array in r4
+    MOV R0, #0              @ initialze index variable
+    LDR R1, =a
 
-@@@@@@@@@@@@@@@@@ INPUT
-input:
-    ldr r0, =prompt
-    bl puts
-    ldr r0, =scanFMT @ r0 <- &scan format
-    ldr r1, =number @ r1 <- &number
-    bl scanf @ call to scanf
-    ldr r1, =number
-    ldr r1, [r1]
-    cmp r1, #0 @ look for sentinal (negative)
-    blt isort @ goto isort function
-    add r0, r4, r6, LSL #2 @ r0 <- &array[4*count]
-    str r1, [r0] @ array[4*count] <- number
-    add r6, r6, #1 @ count = count + 1
-b input
+writeloop:
+    LSL R2, R0, #2          @ multiply index*4 to get array offset
+    ADD R2, R1, R2          @ R2 now has the element address
+    MOV R6, #10            @ load 10 to r6
+    SUB R6, R6, R0
+    STR R6, [R2]              @ write the address of a[i] to a[i]
+    ADD R0, R0, #1
+    LSL R2, R0, #2          @ increment index
+    ADD R2, R1, R2
+    MOV R6, #2
+    STR R6, [R2]
+    ADD R0, R0, #1
+    LSL R2, R0, #2
+    ADD R2, R2, R1
+    MOV R6, #8
+    STR R6, [R2]
+ 
+writedone:
+    MOV R0, #0              @ initialze index variable
+    MOV R2, #0
+    MOV R3, #0
+    MOV R6, #0
 
-@@@@@@@@@@@@@@@@@ ISORT
-/*
-@@ sort the integers
-@ C/C++/Java Code:
-@ null insertion(int[] a, int n)
-@ { for (int i = 1; i < n; i++)
-@ { temp = a[i];
-@ j = i-1;
-@ while (j >= 0 && temp < a[j])
-@ { a[j+1] = a[j];
-@ j = j-1;
-@ }
-@ a[j+1] = temp;
-@ }
-@ }
-@@
-*/
-isort:
-    mov r0, r4 @ r0 <- &array (a)
-    mov r1, r6 @ r1 <- count = length (n)
-    @
-    mov r2, #1 @ i = 1
-iloop: @ for-loop as while loop
-    cmp r2, r1 @ i - n
-    bge iloopend @ i >= n => loopend
-    65
-    10. Searching and Sorting
-    add r10, r0, r2, LSL #2 @ temp = &array[4*i]
-    ldr r10, [r10] @ temp = array[4*i]
-    sub r3, r2, #1 @ j = i - 1
-jloop: @ while-loop
-    cmp r3, #0 @ j >= 0 ?
-    blt jloopend
-    add r9, r0, r3, LSL #2 @ r9 <- &array[4*j]
-    ldr r9, [r9] @ r9 <- array[4*j]
-    cmp r10, r9 @ temp < array[4*j] ?
-    bge jloopend
-    add r8, r0, r3, LSL #2
-    add r8, r8, #4 @ r8 <- &array[4*(j+1)]
-    str r9, [r8] @ a[j+1] <- a[j]
-    sub r3, r3, #1 @ j <- j - 1
-    b jloop
-    @ end jloop
-jloopend:
-    add r3, r3, #1 @ j <- j+1
-    add r8, r0, r3, LSL #2 @ r8 <- &array[4*(j+1)]
-    str r10, [r8] @ a[j+1] <- temp
-    add r2, r2, #1 @ i++
-    b iloop
-@ end iloop
-iloopend:
-    @ end isort
-@@@@@@@@@@@@@@@@ OUTPUT
-output:
-    ldr r0, =result
-    bl puts
-    mov r5, #0 @ r5 counter
-ploop: cmp r6, r5 @ n - counter
-    ble exit @ done printing
-    add r3, r4, r5, LSL #2 @ r3 <- &array[4*counter]
-    ldr r1, [r3] @ r1 <- array[4*counter]
-    ldr r0, =printFMT @ r0 <- &print format
-    bl printf
-    add r5, r5, #1 @ n++
-    b ploop
-@@@@@@@@@@@@@@@@ EXIT
-exit:
-    mov r0, r6 @ r0 = r6 return code = n
-    ldr r1, =return @ r1 <- &return
-    ldr lr, [r1] @ lr <- *r1 saved return address
-    bx lr
+outerloop:
+  CMP R0, #3
+  BEQ sortdone
+  LSL R2, R0, #2
+  ADD R2, R2, R1
+  MOV R6, R2
+  ADD R3, R0, #1
+  LDR R9, [R2]
 
-@@@@@@@@@@@@@@@@@
+innerloop:
+    CMP R3, #3
+    BEQ SWAP
+    LSL R5, R3, #2
+    ADD R5, R1, R5
+    LDR R10, [R5]
+    LDR R9, [R2]
+    CMP R9, R10
+    BLT CONT
+    MOV R2, R5
+    CONT:
+       ADD R3, R3, #1
+       B innerloop
+
+SWAP:
+  LDR R7, [R6]
+  LDR R8, [R2]
+  STR R7, [R2]
+  STR R8, [R6]
+  ADD R0, R0, #1
+  B outerloop
+  
+sortdone:
+  MOV R0, #0
+  MOV R1, #0
+  MOV R2, #0
+
+/* FORKED FROM https://github.com/cmcmurrough/cse2312/blob/master/examples/array.s */
+/* THIS IS JUST TO SHOW THAT IT SORTS*/
+readloop:
+    CMP R0, #3            @ check to see if we are done iterating3
+    BEQ readdone            @ exit loop if done
+    LDR R1, =a              @ get address of a
+    LSL R2, R0, #2          @ multiply index*4 to get array offset
+    ADD R2, R1, R2          @ R2 now has the element address
+    LDR R1, [R2]            @ read the array at address
+    PUSH {R0}               @ backup register before printf
+    PUSH {R1}               @ backup register before printf
+    PUSH {R2}               @ backup register before printf
+    MOV R2, R1              @ move array value to R2 for printf
+    MOV R1, R0              @ move array index to R1 for printf
+    BL  _printf             @ branch to print procedure with return
+    POP {R2}                @ restore register
+    POP {R1}                @ restore register
+    POP {R0}                @ restore register
+    ADD R0, R0, #1          @ increment index
+    B   readloop            @ branch to next loop iteration
+readdone:
+    B _exit                 @ exit if done
+
+_exit:
+    MOV R7, #4              @ write syscall, 4
+    MOV R0, #1              @ output stream to monitor, 1
+    MOV R2, #21             @ print string length
+    LDR R1, =exit_str       @ string at label exit_str:
+    SWI 0                   @ execute syscall
+    MOV R7, #1              @ terminate syscall, 1
+    SWI 0                   @ execute syscall
+ 
+_printf:
+    PUSH {LR}               @ store the return address
+    LDR R0, =printf_str     @ R0 contains formatted string address
+    BL printf               @ call printf
+    POP {PC}                @ restore the stack pointer and return
+
+/* FINISHED FORKING */
 .data
-number: .word 0 @ place to hold input number
-array: .space 100 @ room for 25 integers = 100 bytes
-return: .word 0 @ place for return address of main
-prompt: .asciz "Input a positive integer (negative to quit): "
-result: .asciz "Sorted, those integers are: \n"
-scanFMT: .asciz "%d"
-printFMT: .asciz " %d\n"
 
-@@@@@@@@@@@@@@@@@
-/* External */
-.global printf
-.global scanf
-.global puts
+.balign 4
+a:              .skip       12
+printf_str:     .asciz      "a[%d] = %d\n"
+exit_str:       .ascii      "Terminating program.\n"
