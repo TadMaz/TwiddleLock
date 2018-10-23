@@ -178,6 +178,8 @@ def secure_check():
     entered_key = []
     for i in range(len(durations_list)):
         entered_key.append(directions_list[i] + str(durations_list[i]))
+    entered_key.reverse()
+    print(entered_key)
     for i in range(len(entered_key)):
         if entered_key[i] != SECURE_UNLOCK_KEY[i]:
             return False
