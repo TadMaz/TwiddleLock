@@ -41,7 +41,7 @@ durations_list = []
 directions_list = []
 
 
-UNLOCK_KEY = ["1", "1", "1", "1"]
+UNLOCK_KEY = ["1.0", "1.0", "2.0", "2.0"]
 SECURE_UNLOCK_KEY = ["L1.0", "R1.0", "L1.0", "R1.0"]
 # Call back global variables
 switch_cb, start_cb = 0, 0
