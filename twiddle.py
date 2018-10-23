@@ -258,6 +258,7 @@ def exit_by_delay():
     exit()
 
 def round_to_5(value):
+    """
     root = math.floor(value)
     decimal = value - root
     if decimal >= 0.5:
@@ -265,6 +266,8 @@ def round_to_5(value):
     else:
         decimal = 0.0
     return round(root + decimal, 1)
+    """
+    return round(value, 0)
 
 def round_all(alist):
     newlist = []
