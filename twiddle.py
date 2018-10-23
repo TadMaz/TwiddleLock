@@ -41,7 +41,7 @@ durations_list = []
 directions_list = []
 
 
-UNLOCK_KEY = [10, 10, 5, 5]
+UNLOCK_KEY = ["1", "1", "1", "1"]
 SECURE_UNLOCK_KEY = ["L1.0", "R1.0", "L1.0", "R1.0"]
 # Call back global variables
 switch_cb, start_cb = 0, 0
@@ -68,7 +68,7 @@ def reset():
 
 
 def secure_mode():
-
+    print("Starting secure mode")
     #start Directions and Duration threads
     direc  = Directions(name = "Directions thread")
     sleep(SAMPLING_PERIOD)
@@ -144,37 +144,26 @@ TOCK = 0
 def unsecure_mode():
     global pi, TICK, DURATIONS
     print("Starting unsecure mode")
-    reading = round(ADCPOT(MCP.read_adc(0)), 2)  # POT is on channel 0
-    print(reading)
-    while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) <= 0.2):
-        pass
-    TICK = time.monotonic()
-    print("Now taking readings")
-    while(len(DURATIONS)< len(KEY)):
-        while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) > 0.2):
-            reading = round(ADCPOT(MCP.read_adc(0)), 2)
-            time.sleep(1/FREQ)
-        DURATIONS.append(round(time.monotonic() - TICK, 1))
-        TICK = time.monotonic()
-        while(abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) <= 0.2):
-            pass
-    print("Code entered")
-    DURATIONS.sort()
-    print("Checking code")
-    if (unsecure_check()):
-        print(DURATIONS)
-        print("Code correct")
-        unlock()
-    else:
-        print(DURATIONS)
-        print("Code incorrect")
-        lock()
-
+    direc  = Directions(name = "Directions thread")
+    sleep(SAMPLING_PERIOD)
+    durat  = Durations(name = "Durartions thread")
+    
+    direc.start()
+    durat.start()
+    
 def unsecure_check():
-    for i in range(len(UNLOCK_KEY)):
-        if UNLOCK_KEY[i] != DURATIONS[i]:
+    if len(durations_list) !=  len(UNLOCK_KEY):
+        print(durations_list)
+        print("Lengths not equal")
+        return False
+    entered_key = []
+    for i in range(len(durations_list)):
+        entered_key.append(str(durations_list[i]))
+    for i in range(len(durations_list)):
+        if entered_key[i] != UNLOCK_KEY[i]:
             return False
     return True
+
 
 
 def secure_check():
@@ -269,11 +258,18 @@ def exit_by_delay():
     print("Exiting")
     print(directions_list)
     durations_list = round_all(times)
+    durations_list.sort()
     print(durations_list)
-    if secure_check():
-        unlock()
+    if LOCK_MODE == 0:
+        if secure_check():
+            unlock()
+        else:
+            lock()
     else:
-        lock()
+        if unsecure_check():
+            unlock()
+        else:
+            lock()
     exit()
 
 def round_to_5(value):
