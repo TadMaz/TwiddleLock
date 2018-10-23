@@ -224,7 +224,7 @@ class Directions(threading.Thread):
 def exit_by_delay():
     print("Exiting")
     print(directions_list)
-    print(durations_list)
+    print(times)
     GPIO.cleanup()
     exit()
 
