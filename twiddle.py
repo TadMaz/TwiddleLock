@@ -172,8 +172,10 @@ def secure_check():
 
     # First check for equal length lists
     if len(durations_list) != len(directions_list):
+        print("Lengths not equal")
         return False
     if len(SECURE_UNLOCK_KEY) !=  len(durations_list):
+        print("Entered length not equal to KEY length")
         return False
     entered_key = []
     for i in range(len(durations_list)):
