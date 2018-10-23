@@ -205,9 +205,9 @@ class Durations(threading.Thread):
         print("{} started!".format(self.getName()))
         while True:
             STATE_CHANGED = False
-            reading = round( ADCPOT(MCP.read_adc(0), 2 )
-            while( abs( reading - round( ADCPOT(MCP.read_adc(0)) ,2 ))<0.2 ):
-	        pass
+            reading = round( ADCPOT(MCP.read_adc(0), 2 ))
+            while (abs(reading - round(ADCPOT(MCP.read_adc(0)), 2)) < 0.2):
+                pass
             TICK = time.monotonic()
             while(not STATE_CHANGED):              
                 sleep(SAMPLING_PERIOD)
