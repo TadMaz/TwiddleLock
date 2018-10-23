@@ -11,6 +11,8 @@ import math
 START_SWITCH = 2
 MODE_SWITCH = 3
 
+LOCK_LIGHT = 17
+UNLOCK_LIGHT = 27
 #SPI
 
 # GPIO SPI Pins
@@ -49,6 +51,8 @@ def setup():
     # Set up the switch pins
     GPIO.setup(START_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(MODE_SWITCH, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.setup(LOCK_LIGHT, GPIO.OUT)
+    GPIO.setup(UNLOCK_LIGHT, GPIO.OUT)
 
 def stop():
     READ = False
@@ -84,6 +88,7 @@ def switch_lock_mode(gpio):
         print("Selected the secure mode")
 
 def main():
+    lock()
     global switch_cb, start_cb
     GPIO.add_event_detect(MODE_SWITCH, GPIO.FALLING, callback=switch_lock_mode, bouncetime=1000) # Switch the mode
     GPIO.add_event_detect(START_SWITCH, GPIO.FALLING, callback=start, bouncetime=1000) # Start the selected mode
@@ -101,10 +106,14 @@ def start(gpio):
         unsecure_mode()
 
 def lock():
+    GPIO.output(LOCK_LIGHT, GPIO.HIGH)
+    GPIO.output(UNLOCK_LIGHT, GPIO.LOW)
     print("Locked")
 
 
 def unlock():
+    GPIO.output(UNLOCK_LIGHT, GPIO.HIGH)
+    GPIO.output(LOCK_LIGHT, GPIO.LOW)
     print("Unlocked")
 
 
@@ -248,6 +257,7 @@ class Directions(threading.Thread):
 
 
 def exit_by_delay():
+    global durations_list
     print("Exiting")
     print(directions_list)
     durations_list = round_all(times)
