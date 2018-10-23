@@ -37,6 +37,9 @@ times = []
 durations_list = []
 directions_list = []
 
+
+UNLOCK_KEY = [10, 10, 5, 5]
+SECURE_UNLOCK_KEY = ["L",10, "R", 10, "L", 5, "L", 5]
 # Call back global variables
 switch_cb, start_cb = 0, 0
 
@@ -126,7 +129,7 @@ def updateDurations():
 DURATIONS = []
 TICK = 0
 TOCK = 0 
-KEY = [1, 1, 2]
+
 
 def unsecure_mode():
     global pi, TICK, DURATIONS
@@ -158,10 +161,29 @@ def unsecure_mode():
         lock()
 
 def unsecure_check():
-    for i in range(len(KEY)):
-        if KEY[i] != DURATIONS[i]:
+    for i in range(len(UNLOCK_KEY)):
+        if UNLOCK_KEY[i] != DURATIONS[i]:
             return False
     return True
+
+
+def secure_check():
+
+    # First check for equal length lists
+    if len(durations_list) != len(directions_list):
+        return False
+    if len(SECURE_UNLOCK_KEY)/2 !=  len(durations_list):
+        return False
+    entered_key = []
+    for i in range(len(durations_list)):
+        entered_key.append(directions_list[i])
+        entered_key.append(durations_list[i])
+    for i in range(len(entered_key)):
+        if entered_key[i] != SECURE_UNLOCK_KEY[i]:
+            return False
+    return True
+    
+    # Check for equality
 
 class Durations(threading.Thread):
     def run(self):
@@ -226,6 +248,10 @@ def exit_by_delay():
     print(directions_list)
     durations_list = round_all(times)
     print(durations_list)
+    if secure_check():
+        unlock()
+    else:
+        lock()
     GPIO.cleanup()
     exit()
 
