@@ -40,7 +40,7 @@ directions_list = []
 
 
 UNLOCK_KEY = [10, 10, 5, 5]
-SECURE_UNLOCK_KEY = ["L1.0", "R1.0", "L1.0", "L1.0"]
+SECURE_UNLOCK_KEY = ["L1.0", "R1.0", "L1.0", "R1.0"]
 # Call back global variables
 switch_cb, start_cb = 0, 0
 
@@ -172,6 +172,8 @@ def secure_check():
 
     # First check for equal length lists
     if len(durations_list) != len(directions_list):
+        print(durations_list)
+        print(directions_list)
         print("Lengths not equal")
         return False
     if len(SECURE_UNLOCK_KEY) !=  len(durations_list):
@@ -248,6 +250,7 @@ class Directions(threading.Thread):
 
 
 def exit_by_delay():
+    global durations_list
     print("Exiting")
     print(directions_list)
     durations_list = round_all(times)
