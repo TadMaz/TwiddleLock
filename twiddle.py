@@ -268,7 +268,6 @@ def exit_by_delay():
         unlock()
     else:
         lock()
-    GPIO.cleanup()
     exit()
 
 def round_to_5(value):
