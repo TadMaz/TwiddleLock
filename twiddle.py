@@ -5,6 +5,7 @@ import RPi.GPIO as GPIO
 import Adafruit_MCP3008
 import Adafruit_GPIO.SPI as SPI
 import threading
+import math
 #GPIO Pins
 
 START_SWITCH = 2
@@ -39,7 +40,7 @@ directions_list = []
 
 
 UNLOCK_KEY = [10, 10, 5, 5]
-SECURE_UNLOCK_KEY = ["L",10, "R", 10, "L", 5, "L", 5]
+SECURE_UNLOCK_KEY = ["L1.0", "R1.0", "L1.0", "L1.0"]
 # Call back global variables
 switch_cb, start_cb = 0, 0
 
@@ -176,8 +177,7 @@ def secure_check():
         return False
     entered_key = []
     for i in range(len(durations_list)):
-        entered_key.append(directions_list[i])
-        entered_key.append(durations_list[i])
+        entered_key.append(directions_list[i] + str(durations_list[i]))
     for i in range(len(entered_key)):
         if entered_key[i] != SECURE_UNLOCK_KEY[i]:
             return False
@@ -255,11 +255,19 @@ def exit_by_delay():
     GPIO.cleanup()
     exit()
 
+def round_to_5(value):
+    root = math.floor(value)
+    decimal = value - root
+    if decimal >= 0.5:
+        decimal = 0.5
+    else:
+        decimal = 0.0
+    return round(root + decimal, 1)
 
 def round_all(alist):
     newlist = []
     for item in alist:
-        newlist.append(round(item, 2))
+        newlist.append(round_to_5(item))
     return newlist
 
 if __name__ == "__main__":
