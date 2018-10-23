@@ -224,9 +224,17 @@ class Directions(threading.Thread):
 def exit_by_delay():
     print("Exiting")
     print(directions_list)
-    print(times)
+    durations_list = round_all(times)
+    print(durations_list)
     GPIO.cleanup()
     exit()
+
+
+def round_all(alist):
+    newlist = []
+    for item in alist:
+        newlist.append(round(item, 2))
+    return newlist
 
 if __name__ == "__main__":
     setup()
